@@ -21,7 +21,8 @@ Command example:
         0 0 0 | 0 0 0 | 0 0 0
         0 0 0 | 0 0 0 | 0 0 0
     
- - you could use below command:
+ - you could use below command for two solutions:
     > solver.exe 2 123456000000000000000000000000000000000000000000000000000000000000000000000000000
+
 
 

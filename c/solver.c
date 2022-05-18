@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
-
-int puzzle[81];
+#include <stdlib.h>
 
 void print_puzzle(int input[])
 {
+    printf("\n");
     for(int i = 0; i < 9; i++)
     {
         for(int j = 0; j < 9; j++)
@@ -70,7 +70,10 @@ bool is_valid(int input[], int index, int val)
 
     return true;
 }
-int total = 0;
+
+//How many solutions user needed if possiable.
+unsigned long long int solution_need = 1;
+
 bool solver(int input[], int index)
 {
     int l_puzze[81];
@@ -78,10 +81,13 @@ bool solver(int input[], int index)
 
     if(index == 81)
     {
-        //print_puzzle(input);
-        //printf("%d\n", ++total);
-        total++;
-        return true;
+        print_puzzle(input);
+        solution_need = (solution_need > 0) ? solution_need - 1 : solution_need;
+        if((solution_need < 0) || (0 < solution_need))
+        {
+           return false; //continue solve
+        }
+        return true; //stop solve
     }
     // not empty, next start
     if(l_puzze[index] != 0)
@@ -95,7 +101,10 @@ bool solver(int input[], int index)
         if(is_valid(l_puzze, index, i))
         {
             l_puzze[index] = i;
-            solver(l_puzze, index + 1);
+            if(solver(l_puzze, index + 1))
+            {
+                return true;
+            }
         }
     }
 
@@ -107,19 +116,36 @@ bool solver(int input[], int index)
 
 int main(int argc, char* argv[])
 {
-    // get input puzzle
-    if(argc != 2)
+    int puzzle[81];
+
+    // check parameter count
+    if(argc != 3)
     {
         return -1;
     }
-    if(strlen(argv[1]) != 81)
+    // config the solver
+    if(argv[1][0] == 'n' || argv[1][0] == 'N')
+    {
+        solution_need = -1;
+    }
+    else if(strtoull(argv[1], NULL, 10) >= 1)
+    {
+        solution_need = strtoull(argv[1], NULL, 10);
+    }
+    else
+    {
+        solution_need = 1;
+    }
+
+    // get input puzzle 
+    if(strlen(argv[2]) != 81)
     {
         return -1;
     }
     for(int i = 0; i < 81; i++)
     {
-        if(('1' <= argv[1][i]) && (argv[1][i] <= '9'))
-            puzzle[i] = argv[1][i] - '0';
+        if(('1' <= argv[2][i]) && (argv[2][i] <= '9'))
+            puzzle[i] = argv[2][i] - '0';
         else
             puzzle[i] = 0;
     }
@@ -128,10 +154,6 @@ int main(int argc, char* argv[])
 
     // solve puzzle
     solver(puzzle, 0);
-
-    // output
-    printf("%d\n", total);
-
 
     return 0;
 }

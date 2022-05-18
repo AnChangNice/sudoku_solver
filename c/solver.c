@@ -112,8 +112,6 @@ bool solver(int input[], int index)
     return false;
 }
 
-//.\solver.exe 9.6....2......93..82.16....7386.2.496.5431.72.1.....35...5.671...739.2...8.....6.
-
 int main(int argc, char* argv[])
 {
     int puzzle[81];
